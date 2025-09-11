@@ -8,7 +8,7 @@
       id: '1',
       title: 'Facade – Kurz & Klar',
       excerpt: 'Ein Design Pattern, das eine einzige, einfache Schnittstelle zu einem komplexen System bietet.',
-      meta: 'Facade · 5 fanden es hilfreich'
+      meta: 'Design Pattern · 5 fanden es hilfreich'
     },
     {
       id: '2',
