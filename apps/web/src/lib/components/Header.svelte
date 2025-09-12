@@ -4,12 +4,20 @@
 </script>
 
 <header class="border-b border-black/5 bg-white/80 backdrop-blur">
-  <div class="mx-auto max-w-3xl px-5 py-4">
-    <div class="flex items-baseline justify-between">
-      <h1 class="text-lg font-semibold tracking-tight">{title}</h1>
-      {#if subtitle}
-        <p class="text-xs text-black/60">{subtitle}</p>
-      {/if}
-    </div>
+  <div class="mx-auto flex max-w-3xl items-center justify-between px-5 py-4">
+    <!-- Titel / Logo -->
+    <a
+      href="/"
+      class="text-lg font-semibold tracking-tight hover:opacity-80 transition-opacity"
+      data-sveltekit-prefetch
+      aria-label="Zur Startseite"
+    >
+      {title}
+    </a>
+
+    <!-- Subtitle rechts -->
+    {#if subtitle}
+      <p class="text-xs text-black/60">{subtitle}</p>
+    {/if}
   </div>
 </header>

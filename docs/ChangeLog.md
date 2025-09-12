@@ -35,10 +35,12 @@ Format orientiert sich an [Keep a Changelog](https://keepachangelog.com/de/1.0.0
 
 ---
 
-## [v0.3.0-supabase] – YYYY-MM-DD
+## [v0.3.0-supabase] – 2025-09-12
 ### Added
-- Supabase-Projekt angebunden (Tabellen, Policies, Seeds)
-- Echte Suche (`ilike`)
+- Supabase-Anbindung: Tabellen `notes`, Policies (RLS) und Beispiel-Daten (Seeds)
+- Suche über Supabase (`ilike` auf Titel, Excerpt, Subject)
+- Notes-Facade und Adapter auf Supabase umgestellt
+- End-to-End getestet: Startseite → Suche → Ergebnisliste → Detailansicht
 
 ---
 
