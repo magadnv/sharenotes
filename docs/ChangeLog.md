@@ -27,11 +27,11 @@ Format orientiert sich an [Keep a Changelog](https://keepachangelog.com/de/1.0.0
 
 ## [v0.2.0-routing] – 2025-09-12
 ### Added
-- Neue Routen: `/search` und `/note/[id]`
-- Facade & Adapter Desing Pattern
-- Start-Navigation
-- Toggle für Top-Notes
-- Backbutton 
+- Routen `/search` und `/note/[id]`
+- Facade- und Adapter-Pattern für Notes
+- Navigation von der Startseite zur Suche
+- Toggle zum Anzeigen beliebter Notizen auf der Startseite
+- Dezent gestalteter Zurück-Button auf Unterseiten
 
 ---
 
