@@ -44,6 +44,15 @@ Format orientiert sich an [Keep a Changelog](https://keepachangelog.com/de/1.0.0
 
 ---
 
+## [v0.3.1-live] – 2025-09-12
+### Added
+- Erste Live-Schaltung von ShareNotes über Vercel
+- Custom Domain eingebunden (https://www.sharenotes.cloud)
+- Basisfunktionen online: Suche, Ergebnisliste, Detailansicht, Beliebte-Notizen-Toggle
+- Responsives Verhalten geprüft (Desktop & Mobile)
+
+---
+
 ## [v1.0.0] – YYYY-MM-DD
 ### Added
 - Erste stabile Abgabe-Version
