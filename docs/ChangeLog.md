@@ -25,10 +25,13 @@ Format orientiert sich an [Keep a Changelog](https://keepachangelog.com/de/1.0.0
 
 ---
 
-## [v0.2.0-routing] – YYYY-MM-DD
+## [v0.2.0-routing] – 2025-09-12
 ### Added
 - Neue Routen: `/search` und `/note/[id]`
-- Dummy-Adapter für Suche
+- Facade & Adapter Desing Pattern
+- Start-Navigation
+- Toggle für Top-Notes
+- Backbutton 
 
 ---
 
