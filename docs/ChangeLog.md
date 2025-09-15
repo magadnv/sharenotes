@@ -51,6 +51,13 @@ Format orientiert sich an [Keep a Changelog](https://keepachangelog.com/de/1.0.0
 - Basisfunktionen online: Suche, Ergebnisliste, Detailansicht, Beliebte-Notizen-Toggle
 - Responsives Verhalten geprüft (Desktop & Mobile)
 
+## [v0.4.0-upload-foundation] – 2025-09-16
+### Added
+- Supabase Auth (Magic Link) implementiert
+- Session-Store (persistSession, autoRefresh, detectSessionInUrl)
+- Profile-Upsert beim Login (Tabelle `profiles`)
+- Guard-Komponente für geschützte Routen
+
 ---
 
 ## [v1.0.0] – YYYY-MM-DD
