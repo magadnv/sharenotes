@@ -51,12 +51,20 @@ Format orientiert sich an [Keep a Changelog](https://keepachangelog.com/de/1.0.0
 - Basisfunktionen online: Suche, Ergebnisliste, Detailansicht, Beliebte-Notizen-Toggle
 - Responsives Verhalten geprüft (Desktop & Mobile)
 
-## [v0.4.0-upload-foundation] – 2025-09-16
+---
+
+## [v0.4.0-mvp] – 2025-09-21
 ### Added
-- Supabase Auth (Magic Link) implementiert
-- Session-Store (persistSession, autoRefresh, detectSessionInUrl)
-- Profile-Upsert beim Login (Tabelle `profiles`)
-- Guard-Komponente für geschützte Routen
+- Notizen können erstellt, gespeichert und mit Text + Anhängen (Bilder/PDFs) veröffentlicht werden
+- Detailansicht zeigt Inhalte aus JSON-Blöcken an (Text, Bilder, PDFs)
+- Login mit Magic Link (Supabase Auth) integriert
+- Dezent platzierter Button auf der Startseite zum Erstellen neuer Notizen
+
+### Changed
+- Datenbankstruktur in Supabase für `notes` erweitert (JSON content, subject, excerpt)
+
+### Fixed
+- Auth-Redirects verbessert, damit Nutzer nach Login direkt zur gewünschten Seite zurückgeleitet werden
 
 ---
 
@@ -65,7 +73,9 @@ Format orientiert sich an [Keep a Changelog](https://keepachangelog.com/de/1.0.0
 - Erste stabile Abgabe-Version
 - Happy Path: Suche → Ergebnis → Detail → Helpful
 
+---
+
 Wie wir es pflegen:
-	1.	Nach jedem Tagging (git tag -a vX.Y.Z …) sofort CHANGELOG aktualisieren.
-	2.	Neue Einträge immer oben einfügen.
-	3.	Nutzt die Kategorien Added, Changed, Fixed – das reicht, um den Überblick zu behalten.
+1. Nach jedem Tagging (`git tag -a vX.Y.Z …`) sofort CHANGELOG aktualisieren.  
+2. Neue Einträge immer oben einfügen.  
+3. Nutzt die Kategorien Added, Changed, Fixed – das reicht, um den Überblick zu behalten.
