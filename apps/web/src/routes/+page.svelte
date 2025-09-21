@@ -25,20 +25,41 @@
     loadingPopular = false;
   }
 
-  // initial laden, wenn Nutzer popular bevorzugt
   onMount(loadPopularIfNeeded);
 
   function onToggle(next: 'focus' | 'popular') {
     mode = next;
-    showTopHelpful.set(next === 'popular'); // persistieren
+    showTopHelpful.set(next === 'popular');
     loadPopularIfNeeded();
   }
 </script>
 
 <section class="mx-auto max-w-3xl">
+  <!-- Kopfzeile: Toggle links, „Neue Notiz“ rechts -->
   <div class="flex items-center justify-between">
-    <h2 class="sr-only">Suche</h2>
-    <SegmentedToggle value={mode} onChange={onToggle} />
+    <div class="flex items-center gap-3">
+      <h2 class="sr-only">Suche</h2>
+      <SegmentedToggle value={mode} onChange={onToggle} />
+    </div>
+
+    <a
+      href="/note/new"
+      aria-label="Neue Notiz erstellen"
+      class="grid h-9 w-9 place-items-center rounded-xl border border-black/10 text-black/70 hover:bg-black/[0.04] focus:outline-none focus:ring-4 focus:ring-black/10"
+      title="Neue Notiz"
+    >
+      <!-- Stift/Notiz-Icon -->
+      <svg viewBox="0 0 24 24" class="h-4 w-4" aria-hidden="true">
+        <path
+          d="M16.862 3.487a2.25 2.25 0 113.182 3.182l-11.31 11.31-4.242 1.06 1.06-4.242 11.31-11.31z"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </a>
   </div>
 
   <form on:submit={onSubmit} class="relative mt-6">
