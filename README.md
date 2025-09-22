@@ -17,3 +17,7 @@ git clone https://github.com/magadnv/sharenotes.git
 cd sharenotes/apps/web
 npm install
 npm run dev
+
+Lege im Ordner apps/web eine Datei .env an mit folgendem Inhalt:
+PUBLIC_SUPABASE_URL=deine-supabase-url
+PUBLIC_SUPABASE_ANON_KEY=dein-anon-key
