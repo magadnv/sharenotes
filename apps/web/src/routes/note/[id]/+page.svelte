@@ -4,6 +4,7 @@
   import { goto } from '$app/navigation';
   import { supabase } from '$lib/supabaseClient';
   import { NotesFacade } from '$lib/facade/notes';
+  import { onMount } from 'svelte';
 
   export let data: { note: NoteDetail | null };
 
@@ -14,7 +15,6 @@
     | { type: 'pdf'; url: string }
     | { type: 'group'; items: Block[] };
 
-  // JSON sicher parsen; bei Fehler -> null (wir rendern dann Plaintext)
   function parseContent(raw: unknown): Block[] | null {
     try {
       if (typeof raw !== 'string') return null;
@@ -25,7 +25,6 @@
     }
   }
 
-  // Gruppen flach ziehen, damit wir gleichmäßig rendern können
   function flatten(b: Block): Block[] {
     return b.type === 'group' ? b.items.flatMap(flatten) : [b];
   }
@@ -42,8 +41,30 @@
     data.note
       ? (data.note as any).helpful ?? (data.note as any).helpful_count ?? 0
       : 0;
+  let hasMarked = false;
   let helpfulBusy = false;
   let helpfulError = '';
+
+  // Beim Laden prüfen, ob diese Notiz von der aktuellen Nutzer:in bereits gelikt wurde
+  onMount(async () => {
+    if (!data.note) return;
+
+    const {
+      data: { user }
+    } = await supabase.auth.getUser();
+
+    if (!user) return;
+
+    const { data: existing, error } = await supabase
+      .from('note_helpful')
+      .select('id')
+      .eq('note_id', data.note.id)
+      .eq('user_id', user.id);
+
+    if (!error && (existing ?? []).length > 0) {
+      hasMarked = true;
+    }
+  });
 
   async function onHelpfulClick() {
     helpfulError = '';
@@ -51,18 +72,18 @@
 
     const noteId = data.note.id;
 
-    // 1. Login prüfen
+    // Login prüfen
     const { data: userData } = await supabase.auth.getUser();
     if (!userData.user) {
       goto(`/auth?redirect=/note/${noteId}`);
       return;
     }
 
-    // 2. Klick verarbeiten
     helpfulBusy = true;
     try {
-      const newCount = await NotesFacade.helpful(noteId);
-      helpfulCount = newCount;
+      const { count, active } = await NotesFacade.helpful(noteId);
+      helpfulCount = count;
+      hasMarked = active;
     } catch (e: any) {
       helpfulError = e?.message ?? 'Konnte Feedback nicht speichern.';
     } finally {
@@ -91,12 +112,18 @@
           </div>
 
           <button
-            class="mt-1 inline-flex items-center rounded-xl border border-black/10 px-3 py-1.5 text-xs font-medium text-black/80 hover:bg-black/[0.04] disabled:opacity-60"
+            class="mt-1 inline-flex items-center rounded-xl border px-3 py-1.5 text-xs font-medium transition
+                   disabled:opacity-60
+                   {hasMarked
+                     ? 'border-black bg-black text-white hover:bg-black/90'
+                     : 'border-black/10 text-black/80 hover:bg-black/[0.04]'}"
             on:click|preventDefault={onHelpfulClick}
             disabled={helpfulBusy}
           >
             {#if helpfulBusy}
               Wird gespeichert…
+            {:else if hasMarked}
+              Als hilfreich markiert
             {:else}
               Hilfreich
             {/if}
@@ -139,7 +166,6 @@
             {/each}
           {/each}
         {:else}
-          <!-- Fallback: alter Content als Plaintext -->
           <p class="leading-7 text-[15px] whitespace-pre-wrap">
             {String(data.note.content ?? '')}
           </p>
@@ -150,7 +176,6 @@
 </div>
 
 <style>
-  /* Etwas ruhigere Abstände als die Standard-typography */
   .prose :where(p):not(:where([class~="not-prose"] *)) {
     margin: 0.7rem 0;
   }
