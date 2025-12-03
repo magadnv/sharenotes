@@ -1,6 +1,9 @@
 <script lang="ts">
   import type { NoteDetail } from '$lib/types/notes';
   import BackButton from '$lib/components/BackButton.svelte';
+  import { goto } from '$app/navigation';
+  import { supabase } from '$lib/supabaseClient';
+  import { NotesFacade } from '$lib/facade/notes';
 
   export let data: { note: NoteDetail | null };
 
@@ -32,8 +35,40 @@
   // Metadaten
   const title = data.note?.title ?? '';
   const subject = data.note?.subject ?? '';
-  const helpful = (data.note as any)?.helpful ?? (data.note as any)?.helpful_count ?? 0;
   const createdAt = (data.note as any)?.created_at ?? null;
+
+  // Helpful-Status (reaktiv)
+  let helpfulCount =
+    data.note
+      ? (data.note as any).helpful ?? (data.note as any).helpful_count ?? 0
+      : 0;
+  let helpfulBusy = false;
+  let helpfulError = '';
+
+  async function onHelpfulClick() {
+    helpfulError = '';
+    if (!data.note) return;
+
+    const noteId = data.note.id;
+
+    // 1. Login prüfen
+    const { data: userData } = await supabase.auth.getUser();
+    if (!userData.user) {
+      goto(`/auth?redirect=/note/${noteId}`);
+      return;
+    }
+
+    // 2. Klick verarbeiten
+    helpfulBusy = true;
+    try {
+      const newCount = await NotesFacade.helpful(noteId);
+      helpfulCount = newCount;
+    } catch (e: any) {
+      helpfulError = e?.message ?? 'Konnte Feedback nicht speichern.';
+    } finally {
+      helpfulBusy = false;
+    }
+  }
 </script>
 
 <div class="mx-auto max-w-3xl space-y-6 px-5 py-6">
@@ -45,12 +80,32 @@
     <article class="mx-auto max-w-2xl">
       <!-- Kopfbereich -->
       <header class="mb-4">
-        <h1 class="text-xl font-semibold tracking-tight">{title}</h1>
-        <div class="mt-1 text-xs text-black/50">
-          {#if subject}{subject} · {/if}
-          {helpful} fanden es hilfreich
-          {#if createdAt} · {new Date(createdAt).toLocaleDateString()}{/if}
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <h1 class="text-xl font-semibold tracking-tight">{title}</h1>
+            <div class="mt-1 text-xs text-black/50">
+              {#if subject}{subject} · {/if}
+              {helpfulCount} fanden es hilfreich
+              {#if createdAt} · {new Date(createdAt).toLocaleDateString()}{/if}
+            </div>
+          </div>
+
+          <button
+            class="mt-1 inline-flex items-center rounded-xl border border-black/10 px-3 py-1.5 text-xs font-medium text-black/80 hover:bg-black/[0.04] disabled:opacity-60"
+            on:click|preventDefault={onHelpfulClick}
+            disabled={helpfulBusy}
+          >
+            {#if helpfulBusy}
+              Wird gespeichert…
+            {:else}
+              Hilfreich
+            {/if}
+          </button>
         </div>
+
+        {#if helpfulError}
+          <p class="mt-2 text-[11px] text-red-600">{helpfulError}</p>
+        {/if}
       </header>
 
       <!-- Inhalt -->
@@ -85,7 +140,9 @@
           {/each}
         {:else}
           <!-- Fallback: alter Content als Plaintext -->
-          <p class="leading-7 text-[15px] whitespace-pre-wrap">{String(data.note.content ?? '')}</p>
+          <p class="leading-7 text-[15px] whitespace-pre-wrap">
+            {String(data.note.content ?? '')}
+          </p>
         {/if}
       </section>
     </article>
